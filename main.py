@@ -21,7 +21,6 @@ def get_all_sensor_column_names():
 
 training_data = pd.read_csv('./trainingData.csv')
 print(training_data.shape)
-print(training_data.head())
 
 sensor_columns = get_all_sensor_column_names()
 
@@ -33,3 +32,9 @@ print(training_data.head())
 training_data['position'] = training_data.apply(
     lambda row : str(int(row['BUILDINGID'])) + "_" + str(int(row['FLOOR'])), axis='columns').astype('category')
 print(training_data.head())
+
+# TODO: create a function that include the above code for preprocessing, add code to
+#   remove columns if necessary
+
+# TODO: feed the training data to a neural network, try to tune it to get a good performance
+#   for both the training and test dataset
