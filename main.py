@@ -19,22 +19,21 @@ def get_all_sensor_column_names():
 
     return column_names
 
-training_data = pd.read_csv('./trainingData.csv')
-print(training_data.shape)
+def read_and_preprocess_data(file_dir):
+    data = pd.read_csv(file_dir)
+    sensor_columns = get_all_sensor_column_names()
 
-sensor_columns = get_all_sensor_column_names()
+    data.loc[:, sensor_columns] = \
+        data.loc[:, sensor_columns].applymap(transform_signal_strength)
+    print(data.head())
 
-training_data.loc[:, sensor_columns] = \
-    training_data.loc[:, sensor_columns].applymap(transform_signal_strength)
-print(training_data.head())
+    # Categorize each row based on Building ID and Floor?
+    data['position'] = data.apply(
+        lambda row : str(int(row['BUILDINGID'])) + "_" + str(int(row['FLOOR'])), axis='columns').astype('category')
+    print(data.head())
+    return data
 
-# Categorize each row based on Building ID and Floor?
-training_data['position'] = training_data.apply(
-    lambda row : str(int(row['BUILDINGID'])) + "_" + str(int(row['FLOOR'])), axis='columns').astype('category')
-print(training_data.head())
-
-# TODO: create a function that include the above code for preprocessing, add code to
-#   remove columns if necessary
-
+if __name__ == '__main__':
+    training_data = read_and_preprocess_data('./trainingData.csv')
 # TODO: feed the training data to a neural network, try to tune it to get a good performance
 #   for both the training and test dataset
