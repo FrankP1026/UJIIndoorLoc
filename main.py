@@ -54,8 +54,17 @@ if __name__ == '__main__':
     features, targets = extract_features_and_targets(training_data, num_classes=number_of_classes)
 
     model = tf.keras.Sequential([
-        tf.keras.layers.Dense(50, activation='relu'),
-        tf.keras.layers.Dense(50, activation='relu'),
+        tf.keras.layers.Dense(500),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Activation('relu'),
+        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(50),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Activation('relu'),
+        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(25),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Activation('relu'),
         tf.keras.layers.Dense(number_of_classes, activation='softmax')
     ])
 
@@ -65,10 +74,16 @@ if __name__ == '__main__':
         metrics=['accuracy']
     )
 
-    model.fit(x=features, y=targets, epochs=100)
+    epochs = 10
+    batch_size = 512
+    model.fit(x=features, y=targets, epochs=epochs, batch_size=batch_size)
 
     # testing
     test_data = read_and_preprocess_data('validationData.csv')
     x_test, y_test = extract_features_and_targets(test_data, num_classes=number_of_classes)
     accr = model.evaluate(x_test, y_test)
     print('Test set\n  Loss: {:0.3f}\n  Accuracy: {:0.3f}'.format(accr[0],accr[1]))
+
+    # TODO: It seems that the accuracy is mostly between 91% to 94%. Try to compare the predition and
+    # the y values of testing data. See if there are any of them that are constantly predicted
+    # incorrectly by the model
