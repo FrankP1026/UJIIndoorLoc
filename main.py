@@ -53,16 +53,20 @@ if __name__ == '__main__':
     number_of_classes = training_data['position'].cat.codes.nunique()
     features, targets = extract_features_and_targets(training_data, num_classes=number_of_classes)
 
+    # Weight regularizer
+    #kernel_regularizer = tf.keras.regularizers.l2()
+    kernel_regularizer = None
+
     model = tf.keras.Sequential([
-        tf.keras.layers.Dense(500),
+        tf.keras.layers.Dense(500, kernel_regularizer=kernel_regularizer),
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Activation('relu'),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(50),
+        #tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(50, kernel_regularizer=kernel_regularizer),
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Activation('relu'),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(25),
+        #tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(25, kernel_regularizer=kernel_regularizer),
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Activation('relu'),
         tf.keras.layers.Dense(number_of_classes, activation='softmax')
@@ -87,3 +91,5 @@ if __name__ == '__main__':
     # TODO: It seems that the accuracy is mostly between 91% to 94%. Try to compare the predition and
     # the y values of testing data. See if there are any of them that are constantly predicted
     # incorrectly by the model
+
+    # TODO: Produce graph for the training processes of different models
